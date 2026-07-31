@@ -1,0 +1,77 @@
+<UserControl x:Class="QLTV.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:QLTV.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vm:DashboardViewModel}"
+             mc:Ignorable="d"
+             FontFamily="Segoe UI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Border Background="#1F3864" CornerRadius="12" Padding="30,25">
+                <StackPanel>
+                    <TextBlock Text="Chào mừng bạn quay lại!"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBlock Text="{Binding NhanVienName}"
+                               FontSize="16"
+                               Foreground="#A8B8D8"
+                               Margin="0,6,0,0" />
+                    <TextBlock Text="Hệ thống quản lý thư viện QLTV"
+                               FontSize="13"
+                               Foreground="#7E93B8"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <WrapPanel Margin="0,20,0,0">
+                <Border Width="230" Height="110" Background="White" CornerRadius="10"
+                        Margin="0,0,16,16" Padding="18,14" BorderBrush="#D9DEE5" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Tổng số sách" FontSize="13" Foreground="#8A94A6" />
+                        <TextBlock Text="{Binding TongSach}" FontSize="30" FontWeight="Bold"
+                                   Foreground="#1F3864" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border Width="230" Height="110" Background="White" CornerRadius="10"
+                        Margin="0,0,16,16" Padding="18,14" BorderBrush="#D9DEE5" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Số độc giả" FontSize="13" Foreground="#8A94A6" />
+                        <TextBlock Text="{Binding TongDocGia}" FontSize="30" FontWeight="Bold"
+                                   Foreground="#2E7D32" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border Width="230" Height="110" Background="White" CornerRadius="10"
+                        Margin="0,0,16,16" Padding="18,14" BorderBrush="#D9DEE5" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Sách đang mượn" FontSize="13" Foreground="#8A94A6" />
+                        <TextBlock Text="{Binding SachDangMuon}" FontSize="30" FontWeight="Bold"
+                                   Foreground="#EF6C00" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border Width="230" Height="110" Background="White" CornerRadius="10"
+                        Margin="0,0,16,16" Padding="18,14" BorderBrush="#D9DEE5" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Sách quá hạn" FontSize="13" Foreground="#8A94A6" />
+                        <TextBlock Text="{Binding SachQuaHan}" FontSize="30" FontWeight="Bold"
+                                   Foreground="#D64545" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#D9DEE5" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Hướng dẫn sử dụng" FontSize="15" FontWeight="Bold" Foreground="#1F3864" />
+                    <TextBlock Text="•  Chọn chức năng ở menu bên trái để quản lý sách, độc giả và phiếu mượn."
+                               FontSize="13" Foreground="#4A5568" Margin="0,10,0,0" />
+                    <TextBlock Text="•  Thẻ độc giả hết hạn sẽ không thể lập phiếu mượn mới."
+                               FontSize="13" Foreground="#4A5568" Margin="0,6,0,0" />
+                    <TextBlock Text="•  Sách quá hạn sẽ bị tính phạt theo quy định trong mục Quy định &amp; phạt."
+                               FontSize="13" Foreground="#4A5568" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

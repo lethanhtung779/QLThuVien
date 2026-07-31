@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="309531f3f6304154ac3b9b0aa75a267d" Name="Diagram1">
+        <EntityTypeShape EntityType="QLTVModel.ChiTietPhieuMuon" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.DocGia" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.NhanVien" Width="1.5" PointX="0.75" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.NhaXuatBan" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.PhieuMuon" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.PhieuPhat" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.QuyDinh" Width="1.5" PointX="7.75" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.Sach" Width="1.5" PointX="3" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.TacGia" Width="1.5" PointX="5.25" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLTVModel.TheLoai" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="QLTVModel.FK__ChiTietPh__MaPhi__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__ChiTietPh__MaSac__59063A47" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__PhieuMuon__MaDoc__534D60F1" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__PhieuPhat__MaDoc__5FB337D6" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__PhieuMuon__MaNha__5441852A" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__Sach__MaNXB__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__PhieuPhat__MaPhi__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.FK__Sach__MaTheLoai__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="QLTVModel.Sach_TacGia" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

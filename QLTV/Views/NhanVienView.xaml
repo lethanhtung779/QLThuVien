@@ -1,0 +1,168 @@
+<UserControl x:Class="QLTV.Views.NhanVienView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:QLTV.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vm:NhanVienViewModel}"
+             mc:Ignorable="d"
+             FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Width="260" Height="32" Padding="8,5" FontSize="13"
+                     VerticalContentAlignment="Center" BorderBrush="#CBD2DC" />
+            <Button Content="Tìm kiếm"
+                    Height="32" Padding="16,0" Margin="8,0,0,0"
+                    Command="{Binding SearchCommand}"
+                    Background="#2E7D32" Foreground="White" BorderThickness="0"
+                    Cursor="Hand" />
+            <Button Content="+ Thêm nhân viên"
+                    Height="32" Padding="16,0" Margin="8,0,0,0"
+                    Command="{Binding AddCommand}"
+                    Background="#1F3864" Foreground="White" BorderThickness="0"
+                    Cursor="Hand" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid Visibility="{Binding IsFormVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" CornerRadius="10" Padding="24" BorderBrush="#D9DEE5" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Thông tin nhân viên"
+                                       FontSize="16" FontWeight="Bold" Foreground="#1F3864"
+                                       Margin="0,0,0,16" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Họ tên *" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding TenNhanVien, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+
+                                <TextBlock Grid.Row="0" Grid.Column="3" Text="Chức vụ" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="4" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding ChucVu, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Tài khoản *" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding TaiKhoan, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         Margin="0,12,0,0" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="3" Text="Mật khẩu" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <TextBox Grid.Row="1" Grid.Column="4" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding MatKhau, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,12,0,0" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Giới tính" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <ComboBox Grid.Row="2" Grid.Column="1" Height="32" FontSize="13" Margin="0,12,0,0">
+                                    <ComboBox.ItemsSource>
+                                        <x:Array Type="sys:Boolean" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                            <sys:Boolean>True</sys:Boolean>
+                                            <sys:Boolean>False</sys:Boolean>
+                                        </x:Array>
+                                    </ComboBox.ItemsSource>
+                                    <ComboBox.SelectedItem>
+                                        <Binding Path="GioiTinh" Mode="TwoWay" />
+                                    </ComboBox.SelectedItem>
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource GenderConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="2" Grid.Column="3" Text="Ngày sinh" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <DatePicker Grid.Row="2" Grid.Column="4" Height="32" FontSize="13"
+                                            SelectedDate="{Binding NgaySinh}"
+                                            Margin="0,12,0,0" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Số điện thoại" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding Sdt, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         Margin="0,12,0,0" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="3" Text="Email" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <TextBox Grid.Row="3" Grid.Column="4" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         Margin="0,12,0,0" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Địa chỉ" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Height="32" Padding="6,4" FontSize="13"
+                                         Text="{Binding DiaChi, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,12,0,0" />
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                                <TextBlock Text="{Binding ErrorSummary}"
+                                           Foreground="#D64545" FontSize="12" VerticalAlignment="Center"
+                                           Margin="0,0,14,0" MaxWidth="420" TextWrapping="Wrap" />
+                                <Button Content="Lưu" Width="100" Height="34" Command="{Binding SaveCommand}"
+                                        Background="#2E7D32" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                                <Button Content="Hủy" Width="100" Height="34" Margin="10,0,0,0"
+                                        Command="{Binding CancelCommand}"
+                                        Background="#D64545" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid Visibility="{Binding IsFormVisible, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <DataGrid ItemsSource="{Binding DanhSachNhanVien}"
+                          SelectedItem="{Binding SelectedNhanVien}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Background="White"
+                          BorderBrush="#D9DEE5"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="36"
+                          FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Họ tên" Binding="{Binding NhanVien.TenNhanVien}" Width="1.5*" />
+                        <DataGridTextColumn Header="Tài khoản" Binding="{Binding NhanVien.TaiKhoan}" Width="1*" />
+                        <DataGridTextColumn Header="Chức vụ" Binding="{Binding NhanVien.ChucVu}" Width="1*" />
+                        <DataGridTextColumn Header="Giới tính" Binding="{Binding GioiTinhText}" Width="0.7*" />
+                        <DataGridTextColumn Header="Số điện thoại" Binding="{Binding NhanVien.Sdt}" Width="1*" />
+                        <DataGridTextColumn Header="Email" Binding="{Binding NhanVien.Email}" Width="1.2*" />
+                        <DataGridTemplateColumn Header="Thao tác" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Sửa" Height="26" Padding="10,0" Margin="0,0,6,0"
+                                                Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="#EF6C00" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                                        <Button Content="Xóa" Height="26" Padding="10,0"
+                                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="#D64545" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,99 @@
+<UserControl x:Class="QLTV.Views.ThongKeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:QLTV.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vm:ThongKeViewModel}"
+             mc:Ignorable="d"
+             FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,12">
+            <TextBlock Text="Xuất toàn bộ bảng thống kê ra file Excel"
+                       FontSize="13" Foreground="#8A94A6" VerticalAlignment="Center" Margin="0,0,14,0" />
+            <Button Content="Xuất Excel" Width="120" Height="34"
+                    Command="{Binding ExportExcelCommand}"
+                    Background="#1F3864" Foreground="White" BorderThickness="0" Cursor="Hand" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="10" BorderBrush="#D9DEE5" BorderThickness="1" Padding="14">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Top 5 sách mượn nhiều nhất" FontSize="14" FontWeight="Bold"
+                           Foreground="#1F3864" Margin="0,0,0,10" />
+                <DataGrid ItemsSource="{Binding SachMuonNhieu}" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False" BorderThickness="0" HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal" RowHeight="32" FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tên sách" Binding="{Binding TenSach}" Width="*" />
+                        <DataGridTextColumn Header="Lượt mượn" Binding="{Binding SoLuotMuon}" Width="80" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="2" Background="White" CornerRadius="10" BorderBrush="#D9DEE5" BorderThickness="1" Padding="14">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Top 5 độc giả mượn nhiều nhất" FontSize="14" FontWeight="Bold"
+                           Foreground="#1F3864" Margin="0,0,0,10" />
+                <DataGrid ItemsSource="{Binding DocGiaMuonNhieu}" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False" BorderThickness="0" HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal" RowHeight="32" FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Độc giả" Binding="{Binding TenDocGia}" Width="*" />
+                        <DataGridTextColumn Header="Lượt mượn" Binding="{Binding SoLuotMuon}" Width="80" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="0" Background="White" CornerRadius="10" BorderBrush="#D9DEE5" BorderThickness="1" Padding="14">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Sách sắp hết (còn ≤ 2 bản)" FontSize="14" FontWeight="Bold"
+                           Foreground="#EF6C00" Margin="0,0,0,10" />
+                <DataGrid ItemsSource="{Binding SachSapHet}" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False" BorderThickness="0" HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal" RowHeight="32" FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tên sách" Binding="{Binding TenSach}" Width="*" />
+                        <DataGridTextColumn Header="Còn lại" Binding="{Binding SoLuongCon}" Width="80" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="2" Background="White" CornerRadius="10" BorderBrush="#D9DEE5" BorderThickness="1" Padding="14">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Sách đang mượn quá hạn" FontSize="14" FontWeight="Bold"
+                           Foreground="#D64545" Margin="0,0,0,10" />
+                <DataGrid ItemsSource="{Binding SachQuaHan}" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False" BorderThickness="0" HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal" RowHeight="32" FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Sách" Binding="{Binding TenSach}" Width="1.6*" />
+                        <DataGridTextColumn Header="Độc giả" Binding="{Binding TenDocGia}" Width="1.4*" />
+                        <DataGridTextColumn Header="Hạn trả" Binding="{Binding NgayHenTra, StringFormat={}{0:dd/MM/yyyy}}" Width="1*" />
+                        <DataGridTextColumn Header="Quá hạn (ngày)" Binding="{Binding SoNgayQuaHan}" Width="1*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+        </Grid>
+    </Grid>
+</UserControl>
