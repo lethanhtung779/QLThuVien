@@ -145,7 +145,9 @@ graph LR
 ### 5.5. Tính năng nâng cao
 - **Phân quyền Admin / Thủ thư**: nhân viên có chức vụ "Quản lý" (hoặc chứa "admin") được xem thêm menu *Quản lý nhân viên* và *Quy định & phạt*; Thủ thư chỉ thấy các chức năng tác nghiệp (sách, độc giả, mượn/trả, thống kê). Kiểm tra tại `MainViewModel.IsAdmin`.
 - **Gia hạn thẻ độc giả**: nút *Gia hạn thẻ* trong màn Quản lý độc giả, cộng thêm 1 năm (thẻ đã hết hạn thì tính từ hôm nay), tự mở lại trạng thái thẻ.
-- **In phiếu mượn**: tab Lịch sử phiếu mượn → chọn phiếu → *In phiếu đã chọn*. Dùng `PrintDialog` + `FlowDocument` dựng phiếu (thông tin độc giả, ngày mượn/hạn trả, bảng danh sách sách, chỗ ký), không cần thêm thư viện.
+- **In phiếu mượn**: tab Lịch sử phiếu mượn → chọn phiếu → *In phiếu mượn*. Dùng `PrintDialog` + `FlowDocument` dựng phiếu (thông tin độc giả, ngày mượn/hạn trả, bảng danh sách sách, chỗ ký), không cần thêm thư viện.
+- **In phiếu trả / phạt**: tab Lịch sử → chọn phiếu đã trả hết → *In phiếu trả / phạt*: bảng hạn trả/ngày trả/số ngày quá hạn từng sách, tổng tiền phạt lấy từ bảng `PhieuPhat`.
+- **Nhắc trả sách**: tab *Nhắc trả sách* liệt kê độc giả đang giữ sách quá hạn (SĐT, số sách, số ngày quá hạn) và chi tiết từng sách; nút *In giấy nhắc trả* tạo thư nhắc kèm mức phạt hiện hành. Tự làm mới sau mỗi lần trả sách.
 
 ## 6. Kiến trúc thư mục
 

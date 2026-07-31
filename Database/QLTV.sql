@@ -204,9 +204,9 @@ INSERT INTO DocGia (TenDocGia, NgaySinh, GioiTinh, DiaChi, Sdt, Email, NgayLapTh
 (N'Phạm Thị D', '2001-12-01', 0, N'Đống Đa, Hà Nội',    '0965111222', 'dpt@mail.com', CAST(GETDATE() AS DATE), DATEADD(year, 1, GETDATE()), 1)
 GO
 
--- Phiếu mượn + chi tiết (1 phiếu đang mượn, 1 phiếu đã trả để test thống kê)
+-- Phiếu mượn + chi tiết (1 phiếu ĐANG MƯỢN và QUÁ HẠN để test nhắc trả/phạt, 1 phiếu đã trả)
 INSERT INTO PhieuMuon (MaDocGia, MaNhanVien, NgayMuon, NgayHenTra, GhiChu) VALUES
-(1, 1, DATEADD(day, -5, GETDATE()),  DATEADD(day, 10, GETDATE()), NULL),
+(1, 1, DATEADD(day, -5, GETDATE()),  DATEADD(day, -3, GETDATE()), NULL),
 (2, 1, DATEADD(day, -20, GETDATE()), DATEADD(day, -6, GETDATE()), NULL)
 GO
 

@@ -53,6 +53,20 @@ namespace QLTV.ViewModels
         public string TrangThaiText => SoDaTra >= TongSach ? "Đã trả hết" : "Đang mượn";
     }
 
+    public class DocGiaQuaHanItem
+    {
+        public DocGia DocGia { get; set; }
+        public int SoLuongSachQuaHan { get; set; }
+        public int SoNgayQuaHanToiDa { get; set; }
+    }
+
+    public class SachQuaHanItem
+    {
+        public ChiTietPhieuMuon ChiTiet { get; set; }
+        public string TenSach { get; set; }
+        public int SoNgayQuaHan { get; set; }
+    }
+
     public class PhieuMuonViewModel : BaseViewModel
     {
         private readonly NhanVien _nhanVien;
@@ -66,6 +80,7 @@ namespace QLTV.ViewModels
         private DateTime? _lichSuTuNgay;
         private DateTime? _lichSuDenNgay;
         private LichSuPhieuItem _selectedLichSuPhieu;
+        private DocGiaQuaHanItem _selectedDocGiaQuaHan;
 
         public ObservableCollection<DocGia> DanhSachDocGia { get; } = new ObservableCollection<DocGia>();
         public ObservableCollection<SachChonItem> DanhSachSachKhaDung { get; } = new ObservableCollection<SachChonItem>();
@@ -74,6 +89,8 @@ namespace QLTV.ViewModels
         public ObservableCollection<ChiTietMuonItem> ChiTietPhieuDangChon { get; } = new ObservableCollection<ChiTietMuonItem>();
         public ObservableCollection<LichSuPhieuItem> DanhSachLichSu { get; } = new ObservableCollection<LichSuPhieuItem>();
         public ObservableCollection<ChiTietMuonItem> ChiTietLichSu { get; } = new ObservableCollection<ChiTietMuonItem>();
+        public ObservableCollection<DocGiaQuaHanItem> DanhSachDocGiaQuaHan { get; } = new ObservableCollection<DocGiaQuaHanItem>();
+        public ObservableCollection<SachQuaHanItem> DanhSachSachQuaHan { get; } = new ObservableCollection<SachQuaHanItem>();
 
         public ICommand ChonSachCommand { get; }
         public ICommand BoSachCommand { get; }
@@ -82,6 +99,9 @@ namespace QLTV.ViewModels
         public ICommand TraTatCaCommand { get; }
         public ICommand LocLichSuCommand { get; }
         public ICommand InPhieuCommand { get; }
+        public ICommand InPhieuTraCommand { get; }
+        public ICommand LamMoiNhacTraCommand { get; }
+        public ICommand InGiayNhacTraCommand { get; }
 
         public string Title => "Mượn / Trả sách";
 
@@ -153,6 +173,16 @@ namespace QLTV.ViewModels
             }
         }
 
+        public DocGiaQuaHanItem SelectedDocGiaQuaHan
+        {
+            get => _selectedDocGiaQuaHan;
+            set
+            {
+                if (SetProperty(ref _selectedDocGiaQuaHan, value))
+                    LoadSachQuaHan();
+            }
+        }
+
         public PhieuMuonViewModel(NhanVien nhanVien)
         {
             _nhanVien = nhanVien;
@@ -164,6 +194,9 @@ namespace QLTV.ViewModels
             TraTatCaCommand = new RelayCommand(_ => TraTatCa());
             LocLichSuCommand = new RelayCommand(_ => LoadLichSu());
             InPhieuCommand = new RelayCommand(_ => InPhieuMuon(), _ => SelectedLichSuPhieu != null);
+            InPhieuTraCommand = new RelayCommand(_ => InPhieuTra(), _ => SelectedLichSuPhieu != null);
+            LamMoiNhacTraCommand = new RelayCommand(_ => LoadDocGiaQuaHan());
+            InGiayNhacTraCommand = new RelayCommand(_ => InGiayNhacTra(), _ => SelectedDocGiaQuaHan != null);
 
             NgayMuon = DateTime.Today;
             NgayHenTra = DateTime.Today.AddDays(GetQuyDinhSoNgayMuon());
@@ -172,6 +205,7 @@ namespace QLTV.ViewModels
             LoadSachKhaDung();
             LoadPhieuDangMuon();
             LoadLichSu();
+            LoadDocGiaQuaHan();
         }
 
         private int GetQuyDinhSoNgayMuon()
@@ -504,12 +538,291 @@ namespace QLTV.ViewModels
             LoadSachKhaDung();
             LoadPhieuDangMuon();
             LoadLichSu();
+            LoadDocGiaQuaHan();
         }
 
         private void TraTatCa()
         {
             foreach (var item in ChiTietPhieuDangChon.ToList())
                 TraSach(item);
+        }
+
+        private void LoadDocGiaQuaHan()
+        {
+            DanhSachDocGiaQuaHan.Clear();
+            DanhSachSachQuaHan.Clear();
+            SelectedDocGiaQuaHan = null;
+
+            using (var db = new QLTVEntities())
+            {
+                var groups = db.ChiTietPhieuMuons
+                    .Include(c => c.PhieuMuon.DocGia)
+                    .Where(c => (c.TrangThai ?? false) == false && c.PhieuMuon.NgayHenTra < DateTime.Today)
+                    .ToList()
+                    .GroupBy(c => c.PhieuMuon.DocGia);
+
+                foreach (var g in groups.Where(g => g.Key != null).OrderBy(g => g.Key.TenDocGia))
+                {
+                    DanhSachDocGiaQuaHan.Add(new DocGiaQuaHanItem
+                    {
+                        DocGia = g.Key,
+                        SoLuongSachQuaHan = g.Count(),
+                        SoNgayQuaHanToiDa = g.Max(c => (DateTime.Today - c.PhieuMuon.NgayHenTra.Value).Days)
+                    });
+                }
+            }
+        }
+
+        private void LoadSachQuaHan()
+        {
+            DanhSachSachQuaHan.Clear();
+
+            if (SelectedDocGiaQuaHan == null) return;
+
+            using (var db = new QLTVEntities())
+            {
+                var items = db.ChiTietPhieuMuons
+                    .Include(c => c.Sach)
+                    .Include(c => c.PhieuMuon)
+                    .Where(c => (c.TrangThai ?? false) == false
+                        && c.PhieuMuon.MaDocGia == SelectedDocGiaQuaHan.DocGia.MaDocGia
+                        && c.PhieuMuon.NgayHenTra < DateTime.Today)
+                    .ToList()
+                    .Select(c => new SachQuaHanItem
+                    {
+                        ChiTiet = c,
+                        TenSach = c.Sach?.TenSach,
+                        SoNgayQuaHan = (DateTime.Today - c.PhieuMuon.NgayHenTra.Value).Days
+                    })
+                    .OrderByDescending(c => c.SoNgayQuaHan)
+                    .ToList();
+
+                foreach (var item in items)
+                    DanhSachSachQuaHan.Add(item);
+            }
+        }
+
+        private void InGiayNhacTra()
+        {
+            if (SelectedDocGiaQuaHan == null) return;
+
+            var docGia = SelectedDocGiaQuaHan.DocGia;
+            var items = DanhSachSachQuaHan.ToList();
+            decimal phatMotNgay = 0;
+
+            using (var db = new QLTVEntities())
+            {
+                var quyDinh = db.QuyDinhs.FirstOrDefault(q => q.TenQuyDinh.Contains("phạt quá hạn"));
+                if (quyDinh != null)
+                    decimal.TryParse(quyDinh.GiaTri, out phatMotNgay);
+            }
+
+            var flowDoc = new FlowDocument
+            {
+                FontFamily = new FontFamily("Segoe UI"),
+                FontSize = 13,
+                PagePadding = new Thickness(40),
+                ColumnWidth = double.MaxValue
+            };
+
+            flowDoc.Blocks.Add(new Paragraph(new Run("GIẤY NHẮC TRẢ SÁCH"))
+            {
+                FontSize = 20,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 16)
+            });
+
+            var info = new Paragraph { Margin = new Thickness(0, 0, 0, 12) };
+            info.Inlines.Add(new Run("Kính gửi: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(docGia.TenDocGia));
+            info.Inlines.Add(new LineBreak());
+            info.Inlines.Add(new Run("Số điện thoại: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(docGia.Sdt));
+            flowDoc.Blocks.Add(info);
+
+            var noiDung = new Paragraph
+            {
+                Margin = new Thickness(0, 0, 0, 12),
+                TextAlignment = TextAlignment.Justify
+            };
+            noiDung.Inlines.Add(new Run(
+                $"Thư viện xin thông báo: hiện bạn đang giữ {items.Count} cuốn sách quá hạn. " +
+                $"Đề nghị bạn mang sách đến trả trước ngày {DateTime.Today.AddDays(7):dd/MM/yyyy} để tránh phát sinh phí phạt. " +
+                (phatMotNgay > 0 ? $"Mức phạt hiện hành: {phatMotNgay:N0} VNĐ/ngày/sách." : "")));
+            flowDoc.Blocks.Add(noiDung);
+
+            var table = new Table
+            {
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(1),
+                CellSpacing = 0,
+                Margin = new Thickness(0, 0, 0, 20)
+            };
+            table.Columns.Add(new TableColumn { Width = new GridLength(0.6, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(3, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+
+            var rows = new TableRowGroup();
+
+            var headerRow = new TableRow();
+            AddCell(headerRow, "STT", bold: true);
+            AddCell(headerRow, "Tên sách", bold: true);
+            AddCell(headerRow, "Ngày mượn", bold: true);
+            AddCell(headerRow, "Hạn trả", bold: true);
+            AddCell(headerRow, "Quá hạn (ngày)", bold: true);
+            rows.Rows.Add(headerRow);
+
+            var stt = 1;
+            foreach (var c in items)
+            {
+                var row = new TableRow();
+                AddCell(row, stt.ToString());
+                AddCell(row, c.TenSach);
+                AddCell(row, c.ChiTiet.PhieuMuon.NgayMuon?.ToString("dd/MM/yyyy"));
+                AddCell(row, c.ChiTiet.PhieuMuon.NgayHenTra?.ToString("dd/MM/yyyy"));
+                AddCell(row, c.SoNgayQuaHan.ToString());
+                rows.Rows.Add(row);
+                stt++;
+            }
+
+            table.RowGroups.Add(rows);
+            flowDoc.Blocks.Add(table);
+
+            flowDoc.Blocks.Add(new Paragraph(new Run("Trân trọng.")) { TextAlignment = TextAlignment.Right });
+            flowDoc.Blocks.Add(new Paragraph(new Run("Cán bộ thư viện"))
+            {
+                TextAlignment = TextAlignment.Right,
+                Margin = new Thickness(0, 30, 0, 0)
+            });
+
+            var printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                var paginator = ((IDocumentPaginatorSource)flowDoc).DocumentPaginator;
+                printDialog.PrintDocument(paginator, $"GiayNhacTra_{docGia.MaDocGia}");
+            }
+        }
+
+        private void InPhieuTra()
+        {
+            if (SelectedLichSuPhieu == null) return;
+
+            var phieu = SelectedLichSuPhieu.PhieuMuon;
+            var chiTiets = ChiTietLichSu.ToList();
+
+            if (SelectedLichSuPhieu.SoDaTra < SelectedLichSuPhieu.TongSach)
+            {
+                MessageBox.Show("Phiếu này chưa trả hết sách, không thể in phiếu trả.",
+                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            decimal tongPhat = 0;
+            using (var db = new QLTVEntities())
+            {
+                tongPhat = db.PhieuPhats
+                    .Where(p => p.MaPhieuMuon == phieu.MaPhieuMuon)
+                    .Sum(p => p.SoTien ?? 0);
+            }
+
+            var ngayTra = chiTiets.Max(c => c.ChiTiet.NgayTra);
+
+            var flowDoc = new FlowDocument
+            {
+                FontFamily = new FontFamily("Segoe UI"),
+                FontSize = 13,
+                PagePadding = new Thickness(40),
+                ColumnWidth = double.MaxValue
+            };
+
+            flowDoc.Blocks.Add(new Paragraph(new Run("PHIẾU TRẢ SÁCH"))
+            {
+                FontSize = 20,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 16)
+            });
+
+            var info = new Paragraph { Margin = new Thickness(0, 0, 0, 12) };
+            info.Inlines.Add(new Run("Mã phiếu: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(phieu.MaPhieuMuon.ToString()));
+            info.Inlines.Add(new LineBreak());
+            info.Inlines.Add(new Run("Độc giả: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(SelectedLichSuPhieu.TenDocGia));
+            info.Inlines.Add(new LineBreak());
+            info.Inlines.Add(new Run("Ngày mượn: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(phieu.NgayMuon?.ToString("dd/MM/yyyy")));
+            info.Inlines.Add(new Run("      Hạn trả: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(phieu.NgayHenTra?.ToString("dd/MM/yyyy")));
+            info.Inlines.Add(new LineBreak());
+            info.Inlines.Add(new Run("Ngày trả: ") { FontWeight = FontWeights.Bold });
+            info.Inlines.Add(new Run(ngayTra?.ToString("dd/MM/yyyy")));
+            if (tongPhat > 0)
+            {
+                info.Inlines.Add(new LineBreak());
+                info.Inlines.Add(new Run("Tổng tiền phạt: ") { FontWeight = FontWeights.Bold });
+                info.Inlines.Add(new Run($"{tongPhat:N0} VNĐ") { Foreground = Brushes.Red });
+            }
+            flowDoc.Blocks.Add(info);
+
+            var table = new Table
+            {
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(1),
+                CellSpacing = 0,
+                Margin = new Thickness(0, 0, 0, 20)
+            };
+            table.Columns.Add(new TableColumn { Width = new GridLength(0.6, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(3, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+
+            var rows = new TableRowGroup();
+
+            var headerRow = new TableRow();
+            AddCell(headerRow, "STT", bold: true);
+            AddCell(headerRow, "Tên sách", bold: true);
+            AddCell(headerRow, "Hạn trả", bold: true);
+            AddCell(headerRow, "Ngày trả", bold: true);
+            AddCell(headerRow, "Quá hạn (ngày)", bold: true);
+            rows.Rows.Add(headerRow);
+
+            var stt = 1;
+            foreach (var c in chiTiets)
+            {
+                var soNgayQuaHan = c.ChiTiet.NgayTra.HasValue && phieu.NgayHenTra.HasValue
+                    ? Math.Max(0, (c.ChiTiet.NgayTra.Value - phieu.NgayHenTra.Value).Days)
+                    : 0;
+
+                var row = new TableRow();
+                AddCell(row, stt.ToString());
+                AddCell(row, c.TenSach);
+                AddCell(row, phieu.NgayHenTra?.ToString("dd/MM/yyyy"));
+                AddCell(row, c.ChiTiet.NgayTra?.ToString("dd/MM/yyyy"));
+                AddCell(row, soNgayQuaHan > 0 ? soNgayQuaHan.ToString() : "-");
+                rows.Rows.Add(row);
+                stt++;
+            }
+
+            table.RowGroups.Add(rows);
+            flowDoc.Blocks.Add(table);
+
+            flowDoc.Blocks.Add(new Paragraph(new Run("Nhân viên nhận sách"))
+            {
+                TextAlignment = TextAlignment.Left,
+                Margin = new Thickness(0, 30, 0, 0)
+            });
+
+            var printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                var paginator = ((IDocumentPaginatorSource)flowDoc).DocumentPaginator;
+                printDialog.PrintDocument(paginator, $"PhieuTra_{phieu.MaPhieuMuon}");
+            }
         }
 
         private void InPhieuMuon()

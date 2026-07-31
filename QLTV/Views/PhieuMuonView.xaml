@@ -189,9 +189,12 @@
                     <Button Content="Lọc" Height="32" Padding="16,0" Margin="12,0,0,0"
                             Command="{Binding LocLichSuCommand}"
                             Background="#2E7D32" Foreground="White" BorderThickness="0" Cursor="Hand" />
-                    <Button Content="In phiếu đã chọn" Height="32" Padding="16,0" Margin="8,0,0,0"
+                    <Button Content="In phiếu mượn" Height="32" Padding="16,0" Margin="8,0,0,0"
                             Command="{Binding InPhieuCommand}"
                             Background="#1F3864" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                    <Button Content="In phiếu trả / phạt" Height="32" Padding="16,0" Margin="8,0,0,0"
+                            Command="{Binding InPhieuTraCommand}"
+                            Background="#EF6C00" Foreground="White" BorderThickness="0" Cursor="Hand" />
                 </StackPanel>
 
                 <DataGrid Grid.Row="1"
@@ -237,6 +240,69 @@
                         <DataGridTextColumn Header="Hạn trả" Binding="{Binding ChiTiet.PhieuMuon.NgayHenTra, StringFormat={}{0:dd/MM/yyyy}}" Width="1*" />
                         <DataGridTextColumn Header="Ngày trả" Binding="{Binding ChiTiet.NgayTra, StringFormat={}{0:dd/MM/yyyy}}" Width="1*" />
                         <DataGridTextColumn Header="Trạng thái" Binding="{Binding TrangThaiText}" Width="1*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Nhắc trả sách">
+            <Grid Margin="4,14,4,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1.2*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                    <TextBlock Text="Danh sách độc giả đang giữ sách quá hạn"
+                               FontSize="14" FontWeight="Bold" Foreground="#D64545" VerticalAlignment="Center" />
+                    <Button Content="Làm mới" Height="32" Padding="16,0" Margin="12,0,0,0"
+                            Command="{Binding LamMoiNhacTraCommand}"
+                            Background="#1F3864" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                    <Button Content="In giấy nhắc trả" Height="32" Padding="16,0" Margin="8,0,0,0"
+                            Command="{Binding InGiayNhacTraCommand}"
+                            Background="#EF6C00" Foreground="White" BorderThickness="0" Cursor="Hand" />
+                </StackPanel>
+
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding DanhSachDocGiaQuaHan}"
+                          SelectedItem="{Binding SelectedDocGiaQuaHan}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Background="White"
+                          BorderBrush="#D9DEE5"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="34"
+                          FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Độc giả" Binding="{Binding DocGia.TenDocGia}" Width="2*" />
+                        <DataGridTextColumn Header="Số điện thoại" Binding="{Binding DocGia.Sdt}" Width="1.2*" />
+                        <DataGridTextColumn Header="Số sách quá hạn" Binding="{Binding SoLuongSachQuaHan}" Width="1*" />
+                        <DataGridTextColumn Header="Quá hạn nhiều nhất (ngày)" Binding="{Binding SoNgayQuaHanToiDa}" Width="1.5*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Grid.Row="2" Text="Các sách quá hạn của độc giả được chọn"
+                           FontSize="14" FontWeight="Bold" Foreground="#1F3864" Margin="0,16,0,8" />
+
+                <DataGrid Grid.Row="3"
+                          ItemsSource="{Binding DanhSachSachQuaHan}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Background="White"
+                          BorderBrush="#D9DEE5"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="34"
+                          FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Sách" Binding="{Binding TenSach}" Width="3*" />
+                        <DataGridTextColumn Header="Ngày mượn" Binding="{Binding ChiTiet.PhieuMuon.NgayMuon, StringFormat={}{0:dd/MM/yyyy}}" Width="1*" />
+                        <DataGridTextColumn Header="Hạn trả" Binding="{Binding ChiTiet.PhieuMuon.NgayHenTra, StringFormat={}{0:dd/MM/yyyy}}" Width="1*" />
+                        <DataGridTextColumn Header="Quá hạn (ngày)" Binding="{Binding SoNgayQuaHan}" Width="1*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
