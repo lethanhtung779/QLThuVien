@@ -734,7 +734,7 @@ namespace QLTV.ViewModels
             {
                 tongPhat = db.PhieuPhats
                     .Where(p => p.MaPhieuMuon == phieu.MaPhieuMuon)
-                    .Sum(p => p.SoTien ?? 0);
+                    .Sum(p => (decimal?)p.SoTien) ?? 0;
             }
 
             var ngayTra = chiTiets.Max(c => c.ChiTiet.NgayTra);

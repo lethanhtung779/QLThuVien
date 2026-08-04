@@ -22,7 +22,7 @@ namespace QLTV.ViewModels
         {
             using (var db = new QLTVEntities())
             {
-                TongSach = db.Saches.Sum(s => s.SoLuong ?? 0);
+                TongSach = db.Saches.Sum(s => (int?)s.SoLuong) ?? 0;
                 TongDocGia = db.DocGias.Count();
                 SachDangMuon = db.ChiTietPhieuMuons.Count(c => c.TrangThai == false);
                 SachQuaHan = db.ChiTietPhieuMuons.Count(
