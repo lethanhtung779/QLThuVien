@@ -23,7 +23,11 @@ namespace QLTV.ViewModels
             set
             {
                 if (SetProperty(ref _selectedMenuItem, value) && value != null)
+                {
                     CurrentViewModel = value.ViewModel;
+                    if (value.ViewModel is PhieuMuonViewModel phieuMuonVM)
+                        phieuMuonVM.RefreshData();
+                }
             }
         }
 

@@ -58,8 +58,9 @@
                                          Text="{Binding TenNhanVien, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
 
                                 <TextBlock Grid.Row="0" Grid.Column="3" Text="Chức vụ" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" />
-                                <TextBox Grid.Row="0" Grid.Column="4" Height="32" Padding="6,4" FontSize="13"
-                                         Text="{Binding ChucVu, UpdateSourceTrigger=PropertyChanged}" />
+                                <ComboBox Grid.Row="0" Grid.Column="4" Height="32" FontSize="13"
+                                          ItemsSource="{Binding DanhSachChucVu}"
+                                          SelectedItem="{Binding ChucVu, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Tài khoản *" FontSize="13" Foreground="#4A5568" VerticalAlignment="Center" Margin="0,12,0,0" />
                                 <TextBox Grid.Row="1" Grid.Column="1" Height="32" Padding="6,4" FontSize="13"

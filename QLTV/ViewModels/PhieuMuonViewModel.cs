@@ -208,6 +208,15 @@ namespace QLTV.ViewModels
             LoadDocGiaQuaHan();
         }
 
+        public void RefreshData()
+        {
+            LoadDocGias();
+            LoadSachKhaDung();
+            LoadPhieuDangMuon();
+            LoadLichSu();
+            LoadDocGiaQuaHan();
+        }
+
         private int GetQuyDinhSoNgayMuon()
         {
             using (var db = new QLTVEntities())

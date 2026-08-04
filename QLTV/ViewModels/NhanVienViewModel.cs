@@ -32,6 +32,7 @@ namespace QLTV.ViewModels
         private string _email;
 
         public ObservableCollection<NhanVienListItem> DanhSachNhanVien { get; } = new ObservableCollection<NhanVienListItem>();
+        public ObservableCollection<string> DanhSachChucVu { get; } = new ObservableCollection<string> { "Quản lý", "Thủ thư" };
 
         public ICommand SearchCommand { get; }
         public ICommand AddCommand { get; }

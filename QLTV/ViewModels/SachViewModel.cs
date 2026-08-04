@@ -310,6 +310,34 @@ namespace QLTV.ViewModels
                 var sach = db.Saches.Find(SelectedSach.Sach.MaSach);
                 if (sach == null) return;
 
+                foreach (var tacGia in sach.TacGias.ToList())
+                    sach.TacGias.Remove(tacGia);
+
+                var dangMuon = db.ChiTietPhieuMuons.Any(c => c.MaSach == sach.MaSach &&
+                    (c.TrangThai ?? false) == false);
+
+                if (dangMuon)
+                {
+                    MessageBox.Show(
+                        $"Sách \"{sach.TenSach}\" đang được mượn chưa trả, không thể xóa. Hãy trả sách trước khi xóa.",
+                        "Không thể xóa", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var lichSu = db.ChiTietPhieuMuons.Where(c => c.MaSach == sach.MaSach).ToList();
+                if (lichSu.Count > 0)
+                {
+                    var xacNhan = MessageBox.Show(
+                        $"Sách \"{sach.TenSach}\" đã được trả trong {lichSu.Count} phiếu mượn.\n" +
+                        "Xóa sách sẽ xóa luôn các dòng chi tiết trong lịch sử phiếu mượn này. Tiếp tục?",
+                        "Xóa sách có lịch sử", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                    if (xacNhan != MessageBoxResult.Yes)
+                        return;
+
+                    db.ChiTietPhieuMuons.RemoveRange(lichSu);
+                }
+
                 db.Saches.Remove(sach);
 
                 try
