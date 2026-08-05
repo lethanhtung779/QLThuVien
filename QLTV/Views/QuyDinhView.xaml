@@ -13,7 +13,7 @@
                 <DataGrid ItemsSource="{Binding DanhSachQuyDinh}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
-                          IsReadOnly="True"
+                          IsReadOnly="False"
                           Background="White"
                           BorderBrush="#D9DEE5"
                           HeadersVisibility="Column"
@@ -21,7 +21,7 @@
                           RowHeight="36"
                           FontSize="13">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Tên quy định" Binding="{Binding TenQuyDinh}" Width="2*" />
+                        <DataGridTextColumn Header="Tên quy định" Binding="{Binding TenQuyDinh}" Width="2*" IsReadOnly="True" />
                         <DataGridTextColumn Header="Giá trị" Binding="{Binding GiaTri}" Width="1*" IsReadOnly="False" />
                         <DataGridTextColumn Header="Mô tả" Binding="{Binding MoTa}" Width="3*" IsReadOnly="False" />
                     </DataGrid.Columns>
